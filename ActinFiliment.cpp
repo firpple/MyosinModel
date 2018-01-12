@@ -46,6 +46,11 @@ float ActinFiliment::getDistance()
 	return steps * stepSize;
 }
 
+float ActinFiliment::getStepSize()
+{
+	return stepSize;
+}
+
 int ActinFiliment::getSteps()
 {
 	return steps;

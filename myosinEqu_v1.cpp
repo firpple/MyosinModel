@@ -21,8 +21,8 @@
 
 
 //filenames
-#define FILE "output/out6.csv"
-#define FILEP "output/outP6.csv"
+#define FILE "output/out8.csv"
+#define FILEP "output/outP8.csv"
 
 //Sim Parameters
 #define TIME_START 0
@@ -46,11 +46,13 @@
 #define MDP_POP 0
 #define P_POP 0
 #define AMD_POP 0
-#define ATP_POP 10
+#define ATP_POP 100
 #define ADP_POP 0
 
 //isConstant (False by default)
 #define ATP_CONS true
+#define P_CONS true
+#define ADP_CONS true
 
 //reaction names and k values
 #define AM_ATP__MT_A "AM_ATP__MT_A"
@@ -71,7 +73,8 @@
 #define AMD__AM_ADP__K 100
 #define AM_ADP__AMD__K .01
 
-
+//step size
+#define STEPSIZE 2
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -149,13 +152,13 @@ int main()
 	mPool.setMolecule(MT, MT_POP);
 	mPool.setMolecule(A, A_POP);
 	mPool.setMolecule(MDP, MDP_POP);
-	mPool.setMolecule(P, P_POP);
+	mPool.setMolecule(P, P_POP,P_CONS);
 	mPool.setMolecule(AMD, AMD_POP);
 	mPool.setMolecule(ATP, ATP_POP, ATP_CONS);
-	mPool.setMolecule(ADP, ADP_POP);
+	mPool.setMolecule(ADP, ADP_POP, ADP_CONS);
 
 	//creates a actin "filiment"
-	class ActinFiliment Afiliment;
+	class ActinFiliment Afiliment(36 * pow(10, -9));
 
 	//reactions///////////////////////////////////
 	//////////////////////////////////////////////
@@ -342,14 +345,32 @@ int main()
 			////////////////////////////////////////////////////////////////////
 			//User K value code begin///////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////
+
 			//custom formula
 			//put custom reactions here in the form of:
 			//float_temp on the left hand side is 
 			//it_Reactions -> second.KValue is the current reaction's KValue
-			//if(it_Reaction -> first = "REACTIONNAME")
+			//if(it_Reactions -> first = "REACTIONNAME")
 			//{
 			//   float_temp = it_Reactions -> second.KValue * mPool.getMolecule("myosin") * mPool.getMolecule("ATP"))
 			//}
+			if(it_Reactions -> first == A_MDP__AMD_P)
+			{
+				float kSpring = 2;
+				float force = kSpring * Afiliment.getDistance() * Afiliment.getStepSize();
+				float work = force * Afiliment.getStepSize();
+				float kRate = it_Reactions -> second.KValue * mPool.getMolecule(A) * mPool.getMolecule(MDP);
+				float tempature = 293; //room temp
+				float boltzmann = 1.38064852 * pow(10, -23);
+				//work =0;
+				float_Temp = kRate * exp(-1* work / (boltzmann*tempature));
+				//printf("<><> %f <><>\n", -1* work / (boltzmann*tempature));
+				//<><><><><><><<><><><
+			}
+			
+			
+			
+			
 			////////////////////////////////////////////////////////////////////
 			//User K value code end/////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////

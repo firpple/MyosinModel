@@ -11,7 +11,8 @@ class ActinFiliment
 		void TakeStep();
 		void UndoStep();
 		void TakeSteps(int numSteps);
-		float getDistance();
+		float getDistance();		
+		float getStepSize();
 		int getSteps();
 	private:
 		int steps;
