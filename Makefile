@@ -16,7 +16,9 @@ run: myoEqu
 	./myoEqu
 
 clean:
-	rm myoEqu myoEquDebug
+	rm myoEqu myoEquDebug *.o
 
+cleaner:
+	rm myoEqu myoEquDebug *.o *~
 
 
